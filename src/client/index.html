@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+
+<body>
+    <!-- форма для отправки сообщений -->
+    <form name="publish">
+        <label for="targetId">Target</label>
+        <input type="text" name="targetId">
+        <label for="message">message</label>
+        <input type="text" name="message">
+        <input type="submit" value="Отправить">
+    </form>
+
+    <!-- здесь будут появляться входящие сообщения -->
+    <div id="subscribe"></div>
+    <script src="app.js"></script>
+</body>
+
+</html>

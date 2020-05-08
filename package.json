@@ -1,0 +1,29 @@
+{
+  "name": "jrpc-secure",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev:server": "nodemon src/server.js",
+    "dev:client": "ws --spa index.html -d src/client"
+  },
+  "devDependencies": {
+    "eslint": "6.8.0",
+    "eslint-config-airbnb": "18.1.0",
+    "eslint-config-node": "^4.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-import": "2.20.1",
+    "eslint-plugin-jsx-a11y": "6.2.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "7.19.0",
+    "eslint-plugin-react-hooks": "2.5.0",
+    "local-web-server": "^4.0.0",
+    "nodemon": "^2.0.3",
+    "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "uuid": "^8.0.0",
+    "ws": "^7.2.5"
+  }
+}
