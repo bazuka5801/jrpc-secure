@@ -9,13 +9,30 @@ var webSocketServer = new WebSocketServer.Server({
   port: 8081,
 });
 
-function sendMessage(target, from, content, broadcast = false) {
+function sendRpc(target, from, method, ...args) {
   if (clients[target])
     clients[target].net.send(
       JSON.stringify({
-        target: broadcast ? 'All' : target,
+        target,
         from,
-        content,
+        rpcData: {
+          method,
+          args,
+        },
+      })
+    );
+}
+
+function sendRpcBroadcast(target, from, method, ...args) {
+  if (clients[target])
+    clients[target].net.send(
+      JSON.stringify({
+        target: -1,
+        from,
+        rpcData: {
+          method,
+          args,
+        },
       })
     );
 }
@@ -26,16 +43,16 @@ webSocketServer.on('connection', (ws) => {
     net: ws,
   };
   console.log(`New connection ${id}`);
-  sendMessage(id, 'SERVER', `Your id is ${id}`);
+  sendRpc(id, 'SERVER', 'server_hello', id);
 
   ws.on('message', (message) => {
-    const { targetId, content } = JSON.parse(message);
+    const { target, rpcData } = JSON.parse(message);
     console.log(`received message from ${id}`);
-    if (targetId === '-1') {
+    if (target === '-1') {
       for (const key of Object.keys(clients))
-        sendMessage(key, id, content, true);
+        sendRpcBroadcast(key, id, rpcData.method, rpcData.args);
     } else {
-      sendMessage(targetId, id, content);
+      sendRpc(target, id, rpcData.method, rpcData.args);
     }
   });
 

@@ -11,6 +11,7 @@
     "no-process-exit": "off",
     "object-shorthand": "off",
     "no-new-require": "off",
-    "new-cap": "off"
+    "new-cap": "off",
+    "camelcase": "off"
   }
 }

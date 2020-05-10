@@ -1,11 +1,14 @@
 // создать подключение
 var socket = new WebSocket('ws://localhost:8081');
 
-function send(targetId, content) {
+function sendRpc(target, method, ...args) {
   socket.send(
     JSON.stringify({
-      targetId,
-      content,
+      target,
+      rpcData: {
+        method,
+        args,
+      },
     })
   );
 }
@@ -15,7 +18,7 @@ document.forms.publish.onsubmit = function () {
   var targetId = this.targetId.value;
   var outgoingMessage = this.message.value;
 
-  send(targetId, outgoingMessage);
+  sendRpc(targetId, 'message', outgoingMessage);
   return false;
 };
 
@@ -26,8 +29,36 @@ function showMessage(message) {
   document.getElementById('subscribe').appendChild(messageElem);
 }
 
+function RPC_message(ctx, content) {
+  showMessage(`[${ctx.from}] -> [${ctx.target}]: ${content}`);
+}
+
+function RPC_serverHello(ctx, id) {
+  showMessage(`Server say hello, your id ${id}`);
+}
+
+function callRpc(ctx, method, args) {
+  switch (method) {
+    case 'server_hello':
+      RPC_serverHello(ctx, ...args);
+      break;
+    case 'message':
+      RPC_message(ctx, ...args);
+      break;
+    default:
+      break;
+  }
+}
+
 // обработчик входящих сообщений
 socket.onmessage = function (event) {
-  const { from, content, target } = JSON.parse(event.data);
-  showMessage(`[${from}] -> [${target}]: ${content}`);
+  const { target, from, rpcData } = JSON.parse(event.data);
+  callRpc(
+    {
+      target,
+      from,
+    },
+    rpcData.method,
+    rpcData.args
+  );
 };
